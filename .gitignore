@@ -1,6 +1,14 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+.project
+.classpath
+.settings/
+.bpmn/
+target/
+bin/
+.checkstyle
+transaction.log
+*.iml
+*.ipr
+*.iws
+.xml
+.DS_Store
+.metadata/
