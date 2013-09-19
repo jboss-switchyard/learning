@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<switchyard xmlns="urn:switchyard-config:switchyard:1.0" xmlns:bean="urn:switchyard-component-bean:config:1.0" xmlns:camel="urn:switchyard-component-camel:config:1.0" xmlns:jms="urn:switchyard-component-camel-jms:config:1.0" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:soap="urn:switchyard-component-soap:config:1.0" xmlns:transform="urn:switchyard-config:transform:1.0" name="mortgages" targetNamespace="urn:mortgages:1.0">
+  <sca:composite name="mortgages" targetNamespace="urn:mortgages:1.0">
+    <sca:component name="QualificationServiceBean">
+      <bean:implementation.bean class="mortgages.QualificationServiceBean"/>
+      <sca:service name="QualificationService">
+        <sca:interface.java interface="mortgages.QualificationService"/>
+      </sca:service>
+      <sca:property value="${prop.creditTerms}" name="creditTerms"/>
+    </sca:component>
+    <sca:component name="CamelServiceRoute">
+      <camel:implementation.camel>
+        <camel:java class="mortgages.CamelServiceRoute"/>
+      </camel:implementation.camel>
+      <sca:service name="LoanProcessing">
+        <sca:interface.java interface="mortgages.LoanProcessing"/>
+      </sca:service>
+      <sca:reference name="CreditService">
+        <sca:interface.java interface="mortgages.CreditService"/>
+      </sca:reference>
+      <sca:reference name="QualificationService">
+        <sca:interface.java interface="mortgages.QualificationService"/>
+      </sca:reference>
+    </sca:component>
+    <sca:service name="LoanService" promote="CamelServiceRoute/LoanProcessing">
+      <sca:interface.wsdl interface="LoanProcessing.wsdl#wsdl.porttype(LoanProcessingPortType)"/>
+      <soap:binding.soap>
+        <soap:contextMapper/>
+        <soap:messageComposer unwrapped="true"/>
+        <soap:wsdl>LoanProcessing.wsdl</soap:wsdl>
+        <soap:socketAddr>:18080</soap:socketAddr>
+        <soap:contextPath>loans</soap:contextPath>
+      </soap:binding.soap>
+    </sca:service>
+    <sca:reference name="CreditService" multiplicity="0..1" promote="CamelServiceRoute/CreditService">
+      <sca:interface.wsdl interface="FancyCredit.wsdl#wsdl.porttype(CreditWebService)"/>
+      <soap:binding.soap>
+        <soap:contextMapper/>
+        <soap:wsdl>FancyCredit.wsdl</soap:wsdl>
+        <soap:endpointAddress>http://localhost:${testPort:8080}/FancyCredit</soap:endpointAddress>
+      </soap:binding.soap>
+    </sca:reference>
+  </sca:composite>
+  <transforms>
+    <transform:transform.jaxb from="{urn:mortgages:1.0}process" to="java:mortgages.Applicant"/>
+    <transform:transform.smooks from="java:mortgages.Applicant" to="{http://lab2.mortgages/}applicant" type="JAVA2XML" config="Applicant_XML.xml"/>
+    <transform:transform.smooks from="{http://lab2.mortgages/}applicant" to="java:mortgages.Applicant" type="XML2JAVA" config="Applicant_XML.xml"/>
+  </transforms>
+</switchyard>

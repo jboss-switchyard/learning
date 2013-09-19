@@ -1,0 +1,6 @@
+<m:applicant xmlns:m="urn:lab2:1.0">
+	<age>34</age>
+	<name>Joe Smith</name>
+	<creditScore>0</creditScore>
+	<approved>false</approved>
+</m:applicant>

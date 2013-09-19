@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.switchyard.training</groupId>
+  <artifactId>lab4</artifactId>
+  <version>1.0.0</version>
+  <name>org.switchyard.training:lab4</name>
+  <properties>
+    <switchyard.version>1.0.0.Final</switchyard.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.switchyard.components</groupId>
+      <artifactId>switchyard-component-test-mixin-http</artifactId>
+      <version>${switchyard.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>jboss-public-repository</id>
+      <name>JBoss Public Maven Repository</name>
+      <url>http://repository.jboss.org/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>jboss-public-repository</id>
+      <name>JBoss Public Maven Repository</name>
+      <url>http://repository.jboss.org/nexus/content/groups/public</url>
+    </pluginRepository>
+  </pluginRepositories>
+</project>

@@ -1,0 +1,17 @@
+<configuration xmlns="urn:hornetq">
+
+   <connection-factory name="ConnectionFactory">
+      <connectors>
+        <connector-ref connector-name="invm-connector"/>
+      </connectors>
+      
+      <entries>
+         <entry name="ConnectionFactory"/>
+      </entries>
+   </connection-factory>
+   
+   <queue name="loans">
+      <entry name="loans"/>
+   </queue>
+   
+</configuration>

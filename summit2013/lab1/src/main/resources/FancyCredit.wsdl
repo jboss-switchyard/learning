@@ -1,0 +1,51 @@
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://lab2.mortgages/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://lab2.mortgages/"
+	name="CreditWebServiceService">
+	<types>
+		<xs:schema xmlns:tns="http://lab2.mortgages/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			version="1.0" targetNamespace="http://lab2.mortgages/">
+			<xs:element name="applicant" type="tns:applicant" />
+			<xs:complexType name="applicant">
+				<xs:sequence>
+					<xs:element name="age" type="xs:int" />
+					<xs:element name="applicationDate" type="xs:dateTime"
+						minOccurs="0" />
+					<xs:element name="approved" type="xs:boolean" />
+					<xs:element name="creditScore" type="xs:int" />
+					<xs:element name="name" type="xs:string" minOccurs="0" />
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+	</types>
+	<message name="assignScore">
+		<part name="applicant" element="tns:applicant" />
+	</message>
+	<message name="assignScoreResponse">
+		<part name="applicant" element="tns:applicant" />
+	</message>
+	<portType name="CreditWebService">
+		<operation name="assignScore">
+			<input message="tns:assignScore" />
+			<output message="tns:assignScoreResponse" />
+		</operation>
+	</portType>
+	<binding name="CreditWebServicePortBinding" type="tns:CreditWebService">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="document" />
+		<operation name="assignScore">
+			<soap:operation/>
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	<service name="CreditWebServiceService">
+		<port name="CreditWebServicePort" binding="tns:CreditWebServicePortBinding">
+			<soap:address location="http://localhost:8080/FancyCredit" />
+		</port>
+	</service>
+</definitions>

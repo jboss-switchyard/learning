@@ -1,0 +1,10 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="http://mortgages/">
+	<soapenv:Body>
+		<urn:applicant>
+			<age>34</age>
+			<applicationDate>2013-04-05</applicationDate>
+			<name>Baby Face</name>
+			<loanAmount>1000000.00</loanAmount>
+		</urn:applicant>
+	</soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ASCII"?>
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <route>
+        <from uri="switchyard://CreditService"/>
+        <log message="CreditService - message received: ${body}"/>
+    </route>
+</routes>

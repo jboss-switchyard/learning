@@ -1,0 +1,5 @@
+<applicant xmlns="urn:lab2:1.0">
+   <age>34</age>
+   <applicationDate>2013-04-05</applicationDate>
+   <name>Joe Smith</name>
+</applicant>

@@ -1,0 +1,6 @@
+<applicant xmlns="http://mortgages/">
+   <age>34</age>
+   <applicationDate>2013-04-05</applicationDate>
+   <name>Joe Smith</name>
+   <loanAmount>210000.00</loanAmount>
+</applicant>

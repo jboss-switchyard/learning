@@ -1,0 +1,15 @@
+<messaging-deployment xmlns="urn:jboss:messaging-deployment:1.0">
+    <hornetq-server>
+        <jms-destinations>
+            <jms-queue name="AuditQueue">
+                <entry name="AuditQueue"/>
+            </jms-queue>
+            <jms-queue name="QualifyRequest">
+                <entry name="QualifyRequest"/>
+            </jms-queue>
+            <jms-queue name="QualifyResponse">
+                <entry name="QualifyResponse"/>
+            </jms-queue>
+        </jms-destinations>
+    </hornetq-server>
+</messaging-deployment>
