@@ -1,0 +1,156 @@
+
+package org.jboss.example.homeloan.eval
+
+import org.jboss.example.homeloan.data.*;
+
+rule "Underage" 
+    salience 10
+    dialect "mvel"
+    when
+        application : LoanApplication( )
+        Applicant( age < 21 )
+    then
+        System.out.println("'Underage' rule effectuated.");
+        application.setApproved( false );
+        application.setExplanation( "Applicant is underage" );
+        retract( application );
+end
+
+rule "Bankruptcy history" 
+    salience 10
+    dialect "mvel"
+    when
+        a : LoanApplication( )
+        exists (Bankruptcy( yearOfOccurrence > "1990" || amountOwed > "10000" )) 
+    then
+        System.out.println("'Bankruptcy history' rule effectuated.");
+        a.setApproved( false );
+        a.setExplanation( "has been bankrupt" );
+        retract( a );
+end
+
+rule "No bad credit checks" 
+    salience 10
+    dialect "mvel"
+    when
+        app : LoanApplication( )
+        CreditRating( value == "F" || value == "D" || value == "C" )
+    then
+        System.out.println("'No bad credit checks' rule effectuated.");
+        app.setApproved( false );
+        app.setExplanation( "Not Acceptable Credit Rating" );
+        retract( app );
+end
+
+//from row number: 1
+rule "Row 1 Pricing loans" 
+    dialect "mvel"
+    when
+        application : LoanApplication( amount > 10000 , amount <= 100000 , lengthYears == 20 , deposit < 2000 )
+        incomeSource : IncomeSource( selfEmployed == false )
+    then
+        application.setApproved( true );
+        application.setInsuranceCost( 0 );
+        application.setApprovedRate( "3.95" );
+end
+
+//from row number: 2
+rule "Row 2 Pricing loans" 
+    dialect "mvel"
+    when
+        application : LoanApplication( amount > 100000 , amount <= 130000 , lengthYears == 20 , deposit < 3000 )
+        incomeSource : IncomeSource( selfEmployed == false )
+    then
+        application.setApproved( true );
+        application.setInsuranceCost( 10 );
+        application.setApprovedRate( "4.125" );
+end
+
+//from row number: 3
+rule "Row 3 Pricing loans" 
+    dialect "mvel"
+    when
+        application : LoanApplication( amount > 130000 , amount <= 200000 , lengthYears == 30 , deposit < 20000 )
+        incomeSource : IncomeSource( selfEmployed == false )
+    then
+        application.setApproved( true );
+        application.setInsuranceCost( 0 );
+        application.setApprovedRate( "3.25" );
+end
+
+//from row number: 4
+rule "Row 4 Pricing loans" 
+    dialect "mvel"
+    when
+        application : LoanApplication( amount > 130000 , amount <= 200000 , lengthYears == 20 , deposit < 20000 )
+        incomeSource : IncomeSource( selfEmployed == false )
+    then
+        application.setApproved( true );
+        application.setInsuranceCost( 5 );
+        application.setApprovedRate( "2.83" );
+end
+
+//from row number: 1
+//Poor Credit
+rule "Row 1 CreditScoreRange" 
+    salience 20
+    dialect "mvel"
+    when
+        applicant : Applicant( creditScore >= 560 , creditScore <= 619 )
+    then
+        CreditRating credit = new CreditRating();
+        credit.setValue( "F" );
+        insertLogical(credit );
+end
+
+//from row number: 2
+//Sub-prime Credit
+rule "Row 2 CreditScoreRange" 
+    salience 20
+    dialect "mvel"
+    when
+        applicant : Applicant( creditScore >= 620 , creditScore <= 674 )
+    then
+        CreditRating credit = new CreditRating();
+        credit.setValue( "D" );
+        insertLogical(credit );
+end
+
+//from row number: 3
+//Marginal Credit
+rule "Row 3 CreditScoreRange" 
+    salience 20
+    dialect "mvel"
+    when
+        applicant : Applicant( creditScore >= 675 , creditScore <= 699 )
+    then
+        CreditRating credit = new CreditRating();
+        credit.setValue( "C" );
+        insertLogical(credit );
+end
+
+//from row number: 4
+//Good Credit
+rule "Row 4 CreditScoreRange" 
+    salience 20
+    dialect "mvel"
+    when
+        applicant : Applicant( creditScore >= 700 , creditScore <= 719 )
+    then
+        CreditRating credit = new CreditRating();
+        credit.setValue( "B" );
+        insertLogical(credit );
+end
+
+//from row number: 5
+//Prime Credit
+rule "Row 5 CreditScoreRange" 
+    salience 20
+    dialect "mvel"
+    when
+        applicant : Applicant( creditScore >= 720 , creditScore <= 850 )
+    then
+        CreditRating credit = new CreditRating();
+        credit.setValue( "A" );
+        insertLogical(credit );
+end

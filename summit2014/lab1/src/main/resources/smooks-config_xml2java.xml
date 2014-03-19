@@ -1,0 +1,51 @@
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd"
+                      xmlns:core="http://www.milyn.org/xsd/smooks/smooks-core-1.4.xsd"
+                      xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.2.xsd">
+                      
+    <core:namespaces>
+        <core:namespace prefix="app" uri="http://jboss.com/demo/products/soa-p/5.2/Application.xsd"/>
+    </core:namespaces>
+    
+    
+	<jb:bean beanId="loanApp" class="org.jboss.example.homeloan.data.LoanApplication"
+		createOnElement="/app:Application">
+		<jb:value data="/PreQualificationDecisionRequest/Application/Amount"
+			decoder="Integer" property="amount" />
+			
+		<jb:wiring property="applicant" beanIdRef="applicant" />
+		<jb:wiring property="income" beanIdRef="incomeSource" />
+		<!-- 
+		<jb:value data="/PreQualificationDecisionRequest/Application/Interest_Rate"
+			decoder="BigDecimal" property="approvedRate" />
+		<jb:value
+			data="/PreQualificationDecisionRequest/Application/Number_Of_Months"
+			decoder="Integer" property="lengthYears">
+			<jb:decodeParam name="valuePreprocess">
+				value / 12
+			</jb:decodeParam>
+		</jb:value>
+		<jb:value
+			data="/PreQualificationDecisionRequest/Application/Borrowers/Assets_Liabilities/Cash_Deposits/Cash_Deposit/Amount"
+			decoder="Integer" property="deposit" />
+		-->
+	</jb:bean>
+    
+    <jb:bean beanId="applicant" class="org.jboss.example.homeloan.data.Applicant" 
+    	createOnElement="/app:Application/Borrowers/Borrower">
+    	<jb:value data="/app:Application/Borrowers/Borrower/DOB" decoder="Date" property="dob">
+			<jb:decodeParam name="format">MM/dd/yyyy</jb:decodeParam>
+		</jb:value>
+		<jb:value data="/app:Application/Borrowers/Borrower/First_Name" property="firstName" />
+		<jb:value data="/app:Application/Borrowers/Borrower/Last_Name" property="lastName" />
+    </jb:bean>
+	
+	<jb:bean beanId="incomeSource" class="org.jboss.example.homeloan.data.IncomeSource"
+		createOnElement="/app:Application/Borrowers/Borrower/Employment_Information/Employment">
+		<jb:value
+			data="/app:Application/Borrowers/Borrower/Employment_Information/Employment/Monthly_Income"
+			decoder="Integer" property="monthlyAmount" />
+		<jb:value
+			data="/app:Application/Borrowers/Borrower/Employment_Information/Employment/Is_Self_Employed"
+			decoder="Boolean" property="selfEmployed" />
+	</jb:bean>
+</smooks-resource-list>

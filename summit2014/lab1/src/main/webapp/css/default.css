@@ -1,0 +1,49 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,400);
+
+.body {
+	color:#7F7F7F;
+	background-image: url(../images/header_bg.png) repeat-x;
+	background-color:#F0F8FF;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.warning {
+	color: red
+}
+
+.label{
+	font-size: 1.2em;
+	display: inline-block;
+    float: left;
+    clear: left;
+    width: 200px;
+    text-align: left;
+	padding: 20px 0 0 25px;
+}
+
+.lbl{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 120px;
+    text-align: left;
+    color: black;
+	padding: 20px 0 0 25px;
+}
+
+.input {
+  display: inline-block;
+  float: left;
+  width: 158px;
+}
+
+.button {
+  display: inline-block;
+  float: center;
+  width: 164px;
+}
+
+.clarification {
+	font-style: italic; 
+	font-size: small
+}
