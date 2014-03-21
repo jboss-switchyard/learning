@@ -2,11 +2,11 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.jboss.example</groupId>
-  <artifactId>homeloan</artifactId>
-  <version>1.0.16</version>
-  <packaging>war</packaging>
-  <name>org.jboss.example:homeloan</name>
+  <groupId>org.switchyard.training.summit2014</groupId>
+  <artifactId>lab1</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+  <name>lab1</name>
   <distributionManagement>
     <repository>
       <id>local-sramp-repo</id>
@@ -21,7 +21,7 @@
   </distributionManagement>
   <properties>
     <switchyard.version>1.1.0.Final</switchyard.version>
-    <s-ramp.version>0.4.0-SNAPSHOT</s-ramp.version>
+    <s-ramp.version>0.4.0.Final</s-ramp.version>
   </properties>
   <dependencies>
     <dependency>
@@ -115,30 +115,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-entitymanager</artifactId>
-      <version>4.2.0.Final</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>4.2.0.Final</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.switchyard.components</groupId>
-      <artifactId>switchyard-component-test-mixin-naming</artifactId>
-      <version>${switchyard.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.faces</groupId>
-      <artifactId>jboss-jsf-api_2.1_spec</artifactId>
-      <version>2.0.9.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.switchyard.components</groupId>
       <artifactId>switchyard-component-resteasy</artifactId>
       <version>${switchyard.version}</version>
@@ -193,24 +169,6 @@
           <debug>true</debug>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <packagingExcludes>WEB-INF/lib/*.jar,
-                  WEB-INF/classes/META-INF/switchyard.xml</packagingExcludes>
-          <webResources>
-            <resource>
-              <directory>target/classes/META-INF</directory>
-              <targetPath>WEB-INF</targetPath>
-              <includes>
-                <include>switchyard.xml</include>
-              </includes>
-            </resource>
-          </webResources>
         </configuration>
       </plugin>
       <plugin>

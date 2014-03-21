@@ -31,7 +31,7 @@
       </sca:service>
     </sca:component>
     <sca:component name="PreQualificationProcess">
-      <bpm:implementation.bpm persistent="true" processId="PreQualificationService">
+      <bpm:implementation.bpm persistent="false" processId="PreQualificationService">
         <bpm:manifest>
           <bpm:resources>
             <bpm:resource location="PreQualProcess.bpmn" type="BPMN2"/>

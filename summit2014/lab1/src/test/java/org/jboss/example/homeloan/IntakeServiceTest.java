@@ -1,4 +1,4 @@
-package org.jboss.example.homeloan.extra;
+package org.jboss.example.homeloan;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,12 +15,8 @@ import org.jboss.example.homeloan.data.LoanApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.switchyard.component.bpm.config.model.BPMComponentImplementationModel;
-import org.switchyard.component.bpm.config.model.v1.V1BPMComponentImplementationModel;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;
 import org.switchyard.component.test.mixins.naming.NamingMixIn;
-import org.switchyard.config.model.composite.ComponentModel;
-import org.switchyard.test.BeforeDeploy;
 import org.switchyard.test.Invoker;
 import org.switchyard.test.MockHandler;
 import org.switchyard.test.ServiceOperation;
@@ -144,15 +140,5 @@ public class IntakeServiceTest {
         }
         namingMixIn.uninitialize();
     }
-
-	@BeforeDeploy
-	public void disableBPMPersistence() {
-		for (ComponentModel component : namingMixIn.getTestKit().getConfigModel().getComposite().getComponents()) {
-			if (component.getImplementation() instanceof BPMComponentImplementationModel) {
-				V1BPMComponentImplementationModel bpm = (V1BPMComponentImplementationModel)component.getImplementation();
-				bpm.setPersistent(false);
-			}
-		}
-	}
 
 }
