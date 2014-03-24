@@ -1,35 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <switchyard xmlns="urn:switchyard-config:switchyard:1.1" xmlns:bean="urn:switchyard-component-bean:config:1.1" xmlns:bpm="urn:switchyard-component-bpm:config:1.1" xmlns:camel="urn:switchyard-component-camel:config:1.1" xmlns:file="urn:switchyard-component-camel-file:config:1.1" xmlns:jms="urn:switchyard-component-camel-jms:config:1.1" xmlns:resteasy="urn:switchyard-component-resteasy:config:1.1" xmlns:rules="urn:switchyard-component-rules:config:1.1" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:soap="urn:switchyard-component-soap:config:1.1" xmlns:sql="urn:switchyard-component-camel-sql:config:1.1" xmlns:transform="urn:switchyard-config:transform:1.1" xmlns:validate="urn:switchyard-config:validate:1.1" name="homeloan" targetNamespace="urn:homeloan:1.0">
   <sca:composite name="homeloan" targetNamespace="urn:homeloan:1.0">
-    <sca:component name="LoanEvaluation">
-      <rules:implementation.rules>
-        <rules:manifest>
-          <rules:resources>
-            <rules:resource location="mortgages.drl" type="DRL"/>
-          </rules:resources>
-        </rules:manifest>
-        <rules:operations>
-          <rules:operation name="qualify" type="EXECUTE">
-            <rules:inputs>
-              <rules:input from="message.content"/>
-              <rules:input from="message.content.applicant"/>
-              <rules:input from="message.content.bankruptcy"/>
-              <rules:input from="message.content.income"/>
-            </rules:inputs>
-            <rules:outputs/>
-          </rules:operation>
-        </rules:operations>
-      </rules:implementation.rules>
-      <sca:service name="LoanEvaluationService">
-        <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
-      </sca:service>
-    </sca:component>
-    <sca:component name="Credit">
-      <bean:implementation.bean class="org.jboss.example.homeloan.credit.CreditServiceBean"/>
-      <sca:service name="CreditService">
-        <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
-      </sca:service>
-    </sca:component>
     <sca:component name="PreQualificationProcess">
       <bpm:implementation.bpm persistent="false" processId="PreQualificationService">
         <bpm:manifest>
@@ -49,7 +20,6 @@
             </bpm:outputs>
           </bpm:operation>
         </bpm:operations>
-        <bpm:userGroupCallback class="org.jboss.example.homeloan.prequal.LoanUserGroupCallback"/>
         <bpm:workItemHandlers>
           <bpm:workItemHandler class="org.jboss.example.homeloan.prequal.UpdateStatus" name="UpdateStatus"/>
         </bpm:workItemHandlers>
@@ -57,12 +27,6 @@
       <sca:service name="PreQualificationService">
         <sca:interface.java interface="org.jboss.example.homeloan.prequal.PreQualificationService"/>
       </sca:service>
-      <sca:reference name="CreditService">
-        <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
-      </sca:reference>
-      <sca:reference name="LoanEvaluationService">
-        <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
-      </sca:reference>
     </sca:component>
     <sca:component name="Intake">
       <camel:implementation.camel>
@@ -74,49 +38,10 @@
       <sca:reference name="CustomerLookup">
         <sca:interface.java interface="org.jboss.example.homeloan.lookup.CustomerLookup"/>
       </sca:reference>
-      <sca:reference name="PreQualificationService">
-        <sca:interface.java interface="org.jboss.example.homeloan.prequal.PreQualificationService"/>
-      </sca:reference>
     </sca:component>
     <sca:reference name="CustomerLookup" multiplicity="0..1" promote="Intake/CustomerLookup">
       <sca:interface.java interface="org.jboss.example.homeloan.lookup.CustomerLookup"/>
-      <sql:binding.sql>
-        <sql:contextMapper/>
-        <sql:query>SELECT * FROM CUSTOMER where SSN=#</sql:query>
-        <sql:dataSourceRef>java:jboss/datasources/CustomerDS</sql:dataSourceRef>
-      </sql:binding.sql>
     </sca:reference>
-    <sca:service name="IntakeSOAP" promote="Intake/IntakeService">
-      <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
-      <soap:binding.soap>
-        <soap:contextMapper/>
-        <soap:wsdl>IntakeService.wsdl</soap:wsdl>
-        <soap:socketAddr>:18080</soap:socketAddr>
-        <soap:contextPath>homeloan</soap:contextPath>
-      </soap:binding.soap>
-    </sca:service>
-    <sca:service name="IntakeJMS" promote="Intake/IntakeService">
-      <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
-      <jms:binding.jms>
-        <jms:contextMapper excludeNamespaces="urn:switchyard-component-bpm:bpm:1.0"/>
-        <jms:queue>LoanIntake</jms:queue>
-        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
-      </jms:binding.jms>
-    </sca:service>
-    <sca:component name="StatusServiceBean">
-      <bean:implementation.bean class="org.jboss.example.homeloan.status.StatusServiceBean"/>
-      <sca:service name="StatusService">
-        <sca:interface.java interface="org.jboss.example.homeloan.status.StatusService"/>
-      </sca:service>
-    </sca:component>
-    <sca:service name="StatusService" promote="StatusServiceBean/StatusService">
-      <sca:interface.java interface="org.jboss.example.homeloan.status.StatusService"/>
-      <resteasy:binding.rest>
-        <resteasy:contextMapper/>
-        <resteasy:interfaces>org.jboss.example.homeloan.status.QualificationResource</resteasy:interfaces>
-        <resteasy:contextPath>loanstatus</resteasy:contextPath>
-      </resteasy:binding.rest>
-    </sca:service>
   </sca:composite>
   <transforms/>
   <validates>

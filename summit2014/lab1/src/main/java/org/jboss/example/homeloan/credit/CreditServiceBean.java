@@ -2,9 +2,7 @@ package org.jboss.example.homeloan.credit;
 
 import org.jboss.example.homeloan.data.Applicant;
 import org.jboss.example.homeloan.data.CreditInfo;
-import org.switchyard.component.bean.Service;
 
-@Service(CreditService.class)
 public class CreditServiceBean implements CreditService {
 
 	@Override
