@@ -30,7 +30,7 @@ public class Step7Test {
     private SwitchYardTestKit testKit;
     
     @Test
-    public void sanityCheck() throws Exception {
+    public void checkStatus() throws Exception {
 
         // Mock providers for services called from IntakeService
         MockHandler lookUpService = testKit
