@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.jboss.example.homeloan.data.Applicant;
 import org.jboss.example.homeloan.data.Customer;
 import org.jboss.example.homeloan.data.IncomeSource;
 import org.jboss.example.homeloan.data.LoanApplication;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;

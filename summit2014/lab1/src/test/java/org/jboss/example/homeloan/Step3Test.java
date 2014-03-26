@@ -2,13 +2,12 @@ package org.jboss.example.homeloan;
 
 import java.util.Calendar;
 
-import junit.framework.Assert;
-
 import org.jboss.example.homeloan.data.Applicant;
 import org.jboss.example.homeloan.data.CreditInfo;
 import org.jboss.example.homeloan.data.IncomeSource;
 import org.jboss.example.homeloan.data.LoanApplication;
 import org.jboss.example.homeloan.data.Qualification;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
