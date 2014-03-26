@@ -6,7 +6,6 @@ import javax.ws.rs.PathParam;
 
 import org.jboss.example.homeloan.data.Qualification;
 
-
 @Path("/")
 public interface QualificationResource {
 

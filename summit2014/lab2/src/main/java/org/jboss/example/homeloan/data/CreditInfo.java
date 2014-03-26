@@ -10,16 +10,18 @@ public class CreditInfo {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public CreditInfo setScore(int score) {
 		this.score = score;
+		return this;
 	}
 
 	public Applicant getApplicant() {
 		return applicant;
 	}
 
-	public void setApplicant(Applicant applicant) {
+	public CreditInfo setApplicant(Applicant applicant) {
 		this.applicant = applicant;
+		return this;
 	}
 	
 }

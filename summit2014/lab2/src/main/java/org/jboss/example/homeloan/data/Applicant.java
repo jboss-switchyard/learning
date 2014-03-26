@@ -181,8 +181,9 @@ public class Applicant implements Serializable {
 	}
 
 
-	public void setSsn(String ssn) {
+	public Applicant setSsn(String ssn) {
 		this.ssn = ssn;
+		return this;
 	}
 
 }

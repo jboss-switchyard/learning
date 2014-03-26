@@ -14,7 +14,6 @@ public class LoanBean {
 	public void customerUpdate(LoanApplication app, Customer customer) throws Exception {
 		app.getApplicant().setFirstName(customer.getFirstName());
 		app.getApplicant().setLastName(customer.getLastName());
-		app.getApplicant().setDob(new SimpleDateFormat("yyyy-MM-dd").parse(customer.getDob()));
 		app.getApplicant().setPostalCode(customer.getPostalCode());
 		app.getApplicant().setStreetAddress(customer.getStreetAddress());
 		app.getApplicant().setSavingsBalance(customer.getSavingsBalance());
