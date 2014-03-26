@@ -27,6 +27,12 @@
       <sca:service name="PreQualificationService">
         <sca:interface.java interface="org.jboss.example.homeloan.prequal.PreQualificationService"/>
       </sca:service>
+      <sca:reference name="CreditService">
+        <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
+      </sca:reference>
+      <sca:reference name="LoanEvaluationService">
+        <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
+      </sca:reference>
     </sca:component>
     <sca:component name="Intake">
       <camel:implementation.camel>
@@ -38,10 +44,29 @@
       <sca:reference name="CustomerLookup">
         <sca:interface.java interface="org.jboss.example.homeloan.lookup.CustomerLookup"/>
       </sca:reference>
+      <sca:reference name="PreQualificationService">
+        <sca:interface.java interface="org.jboss.example.homeloan.prequal.PreQualificationService"/>
+      </sca:reference>
     </sca:component>
     <sca:reference name="CustomerLookup" multiplicity="0..1" promote="Intake/CustomerLookup">
       <sca:interface.java interface="org.jboss.example.homeloan.lookup.CustomerLookup"/>
     </sca:reference>
+    <sca:service name="IntakeSOAP" promote="Intake/IntakeService">
+      <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
+    </sca:service>
+    <sca:service name="IntakeJMS" promote="Intake/IntakeService">
+      <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
+    </sca:service>
+    <sca:component name="Credit">
+      <sca:service name="CreditService">
+        <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
+      </sca:service>
+    </sca:component>
+    <sca:component name="LoanEvaluation">
+      <sca:service name="LoanEvaluationService">
+        <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
+      </sca:service>
+    </sca:component>
   </sca:composite>
   <transforms/>
   <validates>
