@@ -3,22 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.switchyard.training.summit2014</groupId>
-  <artifactId>lab1</artifactId>
+  <artifactId>lab2</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>lab1</name>
-  <distributionManagement>
-    <repository>
-      <id>local-sramp-repo</id>
-      <name>S-RAMP Releases Repository</name>
-      <url>sramp://localhost:8081/s-ramp-server/?artifactType=SwitchYardApplication</url>
-    </repository>
-    <snapshotRepository>
-      <id>local-sramp-repo-snapshots</id>
-      <name>S-RAMP Snapshots Repository</name>
-      <url>sramp://localhost:8081/s-ramp-server/?artifactType=SwitchYardApplication</url>
-    </snapshotRepository>
-  </distributionManagement>
+  <name>lab2</name>
+
   <properties>
     <switchyard.version>1.1.0.Final</switchyard.version>
     <s-ramp.version>0.4.0.Final</s-ramp.version>
@@ -91,11 +80,6 @@
     </dependency>
     <dependency>
     	<groupId>org.switchyard.components</groupId>
-    	<artifactId>switchyard-component-resteasy</artifactId>
-    	<version>${switchyard.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.switchyard.components</groupId>
     	<artifactId>switchyard-component-bean</artifactId>
     	<version>${switchyard.version}</version>
     </dependency>
@@ -117,6 +101,11 @@
     <dependency>
     	<groupId>org.switchyard.components</groupId>
     	<artifactId>switchyard-component-camel-jms</artifactId>
+    	<version>${switchyard.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.switchyard.components</groupId>
+    	<artifactId>switchyard-component-resteasy</artifactId>
     	<version>${switchyard.version}</version>
     </dependency>
   </dependencies>
@@ -224,5 +213,36 @@
         </plugins>
       </build>
     </profile>
+    
+ <profile>
+      <id>deploylab</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <distributionManagement>
+        <repository>
+          <id>local-sramp-repo</id>
+          <name>S-RAMP Releases Repository</name>
+          <url>sramp://localhost:8080/s-ramp-server/?artifactType=SwitchYardApplication</url>
+        </repository>
+        <snapshotRepository>
+          <id>local-sramp-repo-snapshots</id>
+          <name>S-RAMP Snapshots Repository</name>
+          <url>sramp://localhost:8080/s-ramp-server/?artifactType=SwitchYardApplication</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  
+  
+  
+  
   </profiles>
 </project>
