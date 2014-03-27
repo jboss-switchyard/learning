@@ -1,0 +1,10 @@
+[
+  {
+    "name" : "SLAReport",
+    "generator" : {
+      "@class" : "org.overlord.rtgov.reports.MVELReportGenerator",
+       "scriptLocation" : "SLAReport.mvel"
+    }
+  }
+]
+

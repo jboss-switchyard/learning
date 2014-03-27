@@ -1,0 +1,234 @@
+/**
+ * SLA Report
+ *
+ * Properties:
+ *		serviceType (string) 	- the service type
+ *		operation (string)		- the optional operation name, if not specified then checks all ops on service
+ *		principal (string)		- the optional principal
+ *		start (long)			- the start date/time
+ *		end	(long)				- the end date/time
+ *		maxResponseTime (long)	- the maximum response time before SLA violated
+ *		averagedDuration (long) - optional duration over which response times should be averaged
+ *		calendar (string)		- the optional calendar name
+ *		timezone (string)		- the optional timezone
+ */
+
+import org.overlord.rtgov.reports.model.Report;
+import org.overlord.rtgov.reports.model.Tabular;
+import org.overlord.rtgov.reports.model.Tabular.Header;
+import org.overlord.rtgov.reports.model.Tabular.Row;
+import org.overlord.rtgov.reports.model.Tabular.Summary;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+
+// FUNCTION DEFINITIONS
+
+def calcResponseTime(request, pos, activities) {
+	ResponseSent response=null;
+	
+	// Find accompanying response
+	for (int j=pos+1; response == null && j < activities.size(); j++) {
+	
+		if (activities.get(j) instanceof ResponseSent &&
+				activities.get(j).getReplyToId() != null &&
+				activities.get(j).getReplyToId().equals(request.getMessageId())) {
+			response = activities.get(j);
+		}
+	}
+	
+	context.logDebug("Checking response time for req="+request+" resp="+response);
+	
+	if (response != null) {
+		context.logDebug("Reponse time="+(response.timestamp-request.timestamp));
+		return (response.timestamp - request.timestamp);
+	}
+	
+	return 0;
+}
+
+// MAIN SCRIPT
+
+// Get the relevant properties
+start = properties.get("start");
+end = properties.get("end");
+long maxResponseTime = Long.parseLong(properties.get("maxResponseTime"));
+long averagedDuration = properties.containsKey("averagedDuration") ? Long.parseLong(properties.get("averagedDuration")) : 0;
+
+// Create date formatter based on optionally specified timezone
+java.text.DateFormat formatter=java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.FULL);
+
+java.util.TimeZone tz=null;
+if (properties.containsKey("timezone")) {
+	tz = java.util.TimeZone.getTimeZone(properties.get("timezone"));
+}
+if (tz == null) {
+	tz = java.util.TimeZone.getDefault();
+}
+
+formatter.setTimeZone(tz);
+
+// Obtain the activity store
+activityStore = context.getService(ActivityStore);
+
+if (activityStore == null) {
+	context.logError("Failed to obtain activity store");
+	return;
+}
+
+// Obtain the calendar
+calendar = context.getCalendar(properties.get("calendar"), properties.get("timezone"));
+
+// Query activity store for events related to service, optional operation, date/time range and optional principal
+QuerySpec qs=new QuerySpec();
+qs.setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+start+" AND at.timestamp <= "+end+" ORDER BY at.timestamp");
+qs.setFormat("jpql");
+
+activities=activityStore.query(qs);
+
+// Initialize the report
+report = new Report().setTitle("SLA Report")
+		.setCreated(formatter.format(new java.util.Date(System.currentTimeMillis())));
+
+section = new Tabular();
+report.sections.add(section);
+
+section.header = new Header();
+section.header.columnNames.add("Date/Time");
+section.header.columnNames.add("Response Time(ms)");
+
+// Generate the report contents
+long ignoreUntil=0;
+long totalViolation=0;
+
+for (int i=0; i < activities.size(); i++) {
+	activity = activities.get(i);
+	
+	// Check if we should ignore this activity, due to being part of
+	// a previously identified time window where a SLA violation occurred
+	if (activity.timestamp >= ignoreUntil) {
+	
+		if (activity instanceof RequestReceived) {
+			
+			// Check if invocation is within working hours
+			if (calendar == null || calendar.isWorkingDateTime(activity.timestamp)) {	
+
+				// >>>> Expanded function call due to mvel npe on deployment (RTGOV-299)
+				// long respTime=calcResponseTime(activity, i, activities);
+				ResponseSent response=null;
+				long respTime=0;
+	
+				// Find accompanying response
+				for (int j=i+1; response == null && j < activities.size(); j++) {
+	
+					if (activities.get(j) instanceof ResponseSent &&
+							activities.get(j).getReplyToId() != null &&
+							activities.get(j).getReplyToId().equals(activity.getMessageId())) {
+						response = activities.get(j);
+					}
+				}
+	
+				context.logDebug("Checking response time for req="+activity+" resp="+response);
+	
+				if (response != null) {
+					context.logDebug("Reponse time="+(response.timestamp-activity.timestamp));
+					respTime = response.timestamp - activity.timestamp;
+				}
+				// <<<< End of expanded function
+				
+				// Check if response time violates the SLA
+				if (respTime > maxResponseTime) {
+					context.logInfo("Potential SLA violation detected, response time="+respTime);
+					
+					count = 1;
+					
+					if (averagedDuration > 0) {
+
+						for (int k=i+1; k < activities.size(); k++) {
+						
+							// Check if activity is within the 'averaged duration' timeframe
+							if (activities.get(k).timestamp <= (activity.timestamp+averagedDuration)) {
+							
+								if (activities.get(k) instanceof RequestReceived) {
+									// >>>> Expanded function call due to mvel npe on deployment (RTGOV-299)
+									// long subRespTime=calcResponseTime(activities.get(k), k, activities);
+									ResponseSent subResponse=null;
+									long subRespTime=0;
+	
+									// Find accompanying response
+									for (int m=k+1; subResponse == null && m < activities.size(); m++) {
+	
+										if (activities.get(m) instanceof ResponseSent &&
+												activities.get(m).getReplyToId() != null &&
+												activities.get(m).getReplyToId().equals(activities.get(k).getMessageId())) {
+											subResponse = activities.get(m);
+										}
+									}
+	
+									context.logDebug("Checking sub response time for req="+activities.get(k)+" resp="+subResponse);
+	
+									if (subResponse != null) {
+										context.logDebug("Sub Reponse time="+(subResponse.timestamp-activities.get(k).timestamp));
+										subRespTime = subResponse.timestamp - activities.get(k).timestamp;
+									}				
+									// <<<< End of expanded function
+									
+									if (subRespTime > 0) {
+										respTime += subRespTime;
+										count++;
+									}
+								}
+							} else {
+								// Skip to the end
+								k = activities.size();
+							}
+						}
+						
+						// Average the response time over the duration
+						respTime /= count;
+					}
+					
+					// Check if violation should be reported
+					if (respTime > maxResponseTime) {
+						context.logWarning("SLA violation detected, response time="+respTime);
+						
+						row = new Row();
+						
+						row.values.add(formatter.format(new java.util.Date(activity.timestamp)));
+						row.values.add(respTime);
+						
+						section.rows.add(row);
+						
+						if (averagedDuration > 0) {
+							// Don't check any interactions that occur within the
+							// duration already flagged as a SLA violation
+							ignoreUntil = activity.timestamp + averagedDuration;
+							
+							totalViolation += averagedDuration;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Produce summary
+if (totalViolation > 0) {
+	section.summary = new Summary();
+	section.summary.values.add("Total time (ms)");
+	section.summary.values.add(totalViolation);
+	
+	if (calendar != null) {
+		totalWorking = calendar.getWorkingDuration(start, end);
+		
+		if (totalWorking > 0) {
+			section.summary.properties.put("ViolationPercentage",
+					Math.round((totalViolation*10000.0)/totalWorking)/100.0);
+		}	
+	}
+}
+
+return report;

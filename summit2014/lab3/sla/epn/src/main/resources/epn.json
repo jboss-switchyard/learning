@@ -1,0 +1,29 @@
+{
+  "name" : "SLAMonitorEPN",
+  "subscriptions" : [ {
+    "nodeName" : "SLAViolations",
+    "subject" : "ServiceResponseTimes"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SLAViolations",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ "Situations" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
+        "ruleName" : "SLAViolation"
+      },
+      "predicate" : null,
+      "notifications" : [ {
+      	 "type" : "Processed",
+      	 "subject" : "SituationsProcessed"
+      },{
+      	 "type" : "Results",
+      	 "subject" : "Situations"
+      } ]
+    }
+  ],
+  "version" : "1"
+}

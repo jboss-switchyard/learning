@@ -1,0 +1,30 @@
+{
+  "name" : "AssessCreditPolicyEPN",
+  "version" : "1",
+  "subscriptions" : [ {
+    "nodeName" : "AssessCredit",
+    "subject" : "SOAEvents"
+  } ],
+  "nodes" : [
+    {
+      "name" : "AssessCredit",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "predicate" : {
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+        "expression" : "event.serviceProvider && !event.request && event.serviceType == \"{urn:homeloan:1.0}IntakeService\""
+      },
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+        "script" : "AssessCredit.mvel",
+        "services" : {
+          "CacheManager" : {
+            "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
+          }
+        }
+      }
+    }
+  ]
+}

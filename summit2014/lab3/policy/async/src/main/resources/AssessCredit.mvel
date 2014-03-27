@@ -1,0 +1,59 @@
+String ssn=event.properties.get("ssn");
+
+if (ssn == null) {
+	return;
+}
+
+cm = epc.getService("CacheManager");
+
+// Attempt to lock the entry
+if (!cm.lock("Principals", ssn)) {
+	epc.handle(new Exception("Unable to lock entry for principal '"+ssn+"'"));
+	
+	return;
+}
+
+// Access the cache of principals
+principals = cm.getCache("Principals");
+
+principal = principals.get(ssn);
+
+if (principal == null) {
+	principal = new java.util.HashMap();
+}
+
+int current=principal.get("exposure");
+
+if (current == null) {
+	current = 0;
+}
+		
+if (event.operation == "submitApplication") {
+	
+	double total=event.properties.get("total");
+	
+	int newtotal=current+total;
+	
+	if (newtotal > 150 && current <= 150) {
+		principal.put("suspended", Boolean.TRUE);
+	}
+	
+	principal.put("exposure", newtotal);	
+	
+} else if (event.operation == "makePayment") {
+
+	double amount=event.properties.get("amount");
+		
+	int newamount=current-amount;
+	
+	if (newamount <= 150 && current > 150) {
+		principal.put("suspended", Boolean.FALSE);
+	}
+
+	principal.put("exposure", newamount);
+}
+	
+principals.put(customer, principal);
+	
+epc.logDebug("Updated principal '"+ssn+"': "+principals.get(ssn));	
+

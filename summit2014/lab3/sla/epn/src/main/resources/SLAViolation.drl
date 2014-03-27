@@ -1,0 +1,59 @@
+import org.overlord.rtgov.analytics.service.ResponseTime
+import org.overlord.rtgov.analytics.situation.Situation
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare ResponseTime
+    @role( event )
+end
+
+rule "check for SLA violations"
+when
+    $rt : ResponseTime() from entry-point "ServiceResponseTimes" 
+then
+
+	if ($rt.getAverage() > 200) {
+		epc.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+		
+		Situation situation=new Situation();
+		
+		situation.setType("SLA Violation");
+		situation.setSubject(Situation.createSubject($rt.getServiceType(), $rt.getOperation(),
+						$rt.getFault()));
+		situation.setTimestamp(System.currentTimeMillis());
+		
+		situation.getProperties().putAll($rt.getProperties());
+
+		if ($rt.getRequestId() != null) {
+			situation.getActivityTypeIds().add($rt.getRequestId());
+		}
+		if ($rt.getResponseId() != null) {
+			situation.getActivityTypeIds().add($rt.getResponseId());
+		}
+		
+		situation.getContext().addAll($rt.getContext());
+		
+		String serviceName=$rt.getServiceType();
+		
+		if (serviceName.startsWith("{")) {
+			serviceName = javax.xml.namespace.QName.valueOf(serviceName).getLocalPart();
+		}
+		
+		if ($rt.getAverage() > 400) {
+			situation.setDescription(serviceName+" exceeded maximum response time of 400 ms");
+			situation.setSeverity(Situation.Severity.Critical);
+		} else if ($rt.getAverage() > 320) {
+			situation.setDescription(serviceName+" exceeded response time of 320 ms");
+			situation.setSeverity(Situation.Severity.High);
+		} else if ($rt.getAverage() > 260) {
+			situation.setDescription(serviceName+" exceeded response time of 260 ms");
+			situation.setSeverity(Situation.Severity.Medium);
+		} else {
+			situation.setDescription(serviceName+" exceeded response time of 200 ms");
+			situation.setSeverity(Situation.Severity.Low);
+		}
+		
+		epc.handle(situation);
+	}	
+
+end

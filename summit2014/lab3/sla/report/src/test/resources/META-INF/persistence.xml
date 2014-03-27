@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+            version="1.0">
+	<persistence-unit name="overlord-rtgov-activity-orm" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
+		<class>org.overlord.rtgov.activity.model.ActivityType</class>
+		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
+		<class>org.overlord.rtgov.activity.model.Context</class>
+		<class>org.overlord.rtgov.activity.model.app.CustomActivity</class>
+		<class>org.overlord.rtgov.activity.model.app.LogMessage</class>
+		<class>org.overlord.rtgov.activity.model.bpm.BPMActivityType</class>
+		<class>org.overlord.rtgov.activity.model.bpm.ProcessCompleted</class>
+		<class>org.overlord.rtgov.activity.model.bpm.ProcessStarted</class>
+		<class>org.overlord.rtgov.activity.model.bpm.ProcessVariableSet</class>
+		<class>org.overlord.rtgov.activity.model.common.MessageExchange</class>
+		<class>org.overlord.rtgov.activity.model.mom.MOMActivityType</class>
+		<class>org.overlord.rtgov.activity.model.mom.MessageReceived</class>
+		<class>org.overlord.rtgov.activity.model.mom.MessageSent</class>
+		<class>org.overlord.rtgov.activity.model.soa.RPCActivityType</class>
+		<class>org.overlord.rtgov.activity.model.soa.RequestSent</class>
+		<class>org.overlord.rtgov.activity.model.soa.RequestReceived</class>
+		<class>org.overlord.rtgov.activity.model.soa.ResponseSent</class>
+		<class>org.overlord.rtgov.activity.model.soa.ResponseReceived</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+			<property name="hibernate.hbm2ddl.auto" value="create"/>
+			<property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+			<property name="hibernate.connection.url" value="jdbc:h2:target/db/h2"/>
+			<property name="hibernate.connection.username" value="sa"/>
+			<property name="hibernate.connection.password" value=""/>
+			<property name="hibernate.show_sql" value="true"/>
+		</properties>
+	</persistence-unit>
+</persistence>

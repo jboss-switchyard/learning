@@ -1,0 +1,17 @@
+[{
+  "name" : "RestrictUsage",
+  "version" : "1",
+  "predicate" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+    "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RequestReceived && event.serviceType == \"{urn:homeloan:1.0}IntakeService\""
+  },
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+    "script" : "VerifyLastUsage.mvel",
+    "services" : {
+      "CacheManager" : {
+        "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
+      }
+    }
+  }
+}]
