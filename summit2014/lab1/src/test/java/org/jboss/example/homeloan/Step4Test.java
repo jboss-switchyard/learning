@@ -2,10 +2,11 @@ package org.jboss.example.homeloan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.example.homeloan.data.Applicant;
-import org.jboss.example.homeloan.data.Customer;
 import org.jboss.example.homeloan.data.IncomeSource;
 import org.jboss.example.homeloan.data.LoanApplication;
 import org.junit.Assert;
@@ -45,17 +46,20 @@ public class Step4Test {
         Assert.assertEquals("William", loan.getApplicant().getFirstName());
     }
     
-    private List<Customer> createCustomer() {
-        Customer customer = new Customer();
-        customer.setSsn("711-555-5555");
-        customer.setFirstName("William");
-        customer.setLastName("Lumbergh");
-        customer.setStreetAddress("PO Box 100");
-        customer.setPostalCode("11111");
-        customer.setCheckingBalance(1234.56);
-        customer.setSavingsBalance(6543.21);
-        List<Customer> customerList = new ArrayList<Customer>();
-        customerList.add(customer);
+    private List<Map<String, Object>> createCustomer() {
+        Map<String, Object> customerData = new HashMap<String, Object>();
+        customerData.put("firstName", "William");
+        customerData.put("lastName", "Lumbergh");
+        customerData.put("ssn", "711-555-5555");
+        customerData.put("streetaddress", "PO Box 100");
+        customerData.put("postalcode", "11111");
+        customerData.put("checkingbalance", "1234.56");
+        customerData.put("savingsBalance", "6543.21");
+        customerData.put("dob", "1966-07-04");
+        customerData.put("city", "Anytown");
+        customerData.put("state", "CA");
+        List<Map<String, Object>> customerList = new ArrayList<Map<String, Object>>();
+        customerList.add(customerData);
         return customerList;
     }
     

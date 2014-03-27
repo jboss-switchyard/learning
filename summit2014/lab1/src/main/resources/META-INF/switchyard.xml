@@ -55,7 +55,7 @@
       <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
     </sca:service>
     <sca:service name="IntakeJMS" promote="Intake/IntakeService">
-      <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
+      <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
     </sca:service>
     <sca:component name="Credit">
       <sca:service name="CreditService">

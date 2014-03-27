@@ -78,6 +78,11 @@ Start the server:
 bin/standalone.sh -c standalone-full.xml
 ```
 
+In a separate terminal window, add a JMS queue:
+```
+bin/jboss-cli.sh --connect --command="jms-queue add --queue-address=LoanIntake --entries=LoanIntake"
+```
+
 ####Running the Demo
 
 Inside the homeloan directory ...
