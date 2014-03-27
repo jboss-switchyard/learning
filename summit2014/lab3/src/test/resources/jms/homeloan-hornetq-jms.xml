@@ -1,9 +1,0 @@
-<messaging-deployment xmlns="urn:jboss:messaging-deployment:1.0">
-    <hornetq-server>
-        <jms-destinations>
-            <jms-queue name="LoanIntake">
-                <entry name="LoanIntake"/>
-            </jms-queue>
-        </jms-destinations>
-    </hornetq-server>
-</messaging-deployment>
