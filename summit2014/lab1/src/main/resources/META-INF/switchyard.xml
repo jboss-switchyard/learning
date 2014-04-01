@@ -27,16 +27,10 @@
       <sca:service name="PreQualificationService">
         <sca:interface.java interface="org.jboss.example.homeloan.prequal.PreQualificationService"/>
       </sca:service>
-      <sca:reference name="CreditService">
-        <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
-      </sca:reference>
-      <sca:reference name="LoanEvaluationService">
-        <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
-      </sca:reference>
     </sca:component>
     <sca:component name="Intake">
       <camel:implementation.camel>
-        <camel:java class="org.jboss.example.homeloan.intake.CamelServiceRoute"/>
+        <camel:xml path="IntakeServiceRoute.xml"/>
       </camel:implementation.camel>
       <sca:service name="IntakeService">
         <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
@@ -54,28 +48,36 @@
     <sca:service name="IntakeSOAP" promote="Intake/IntakeService">
       <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
     </sca:service>
-    <sca:service name="IntakeJMS" promote="Intake/IntakeService">
-      <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
-    </sca:service>
     <sca:component name="Credit">
       <sca:service name="CreditService">
         <sca:interface.java interface="org.jboss.example.homeloan.credit.CreditService"/>
       </sca:service>
     </sca:component>
     <sca:component name="LoanEvaluation">
+      <rules:implementation.rules>
+        <rules:manifest>
+          <rules:resources>
+            <rules:resource location="mortgages.drl" type="DRL"/>
+          </rules:resources>
+        </rules:manifest>
+        <rules:operations>
+          <rules:operation name="qualify" type="EXECUTE">
+            <rules:inputs>
+              <rules:input from="message.content"/>
+              <rules:input from="message.content.applicant"/>
+              <rules:input from="message.content.bankruptcy"/>
+              <rules:input from="message.content.income"/>
+            </rules:inputs>
+            <rules:outputs/>
+          </rules:operation>
+        </rules:operations>
+      </rules:implementation.rules>
       <sca:service name="LoanEvaluationService">
         <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
       </sca:service>
     </sca:component>
   </sca:composite>
   <transforms/>
-  <validates>
-    <validate:validate.xml name="{http://jboss.com/demo/products/soa-p/5.2/Application.xsd}Application" schemaType="XML_SCHEMA" namespaceAware="true">
-      <validate:schemaFiles>
-        <validate:entry file="Application.xsd"/>
-      </validate:schemaFiles>
-    </validate:validate.xml>
-  </validates>
   <domain>
     <properties>
       <property name="org.switchyard.handlers.messageTrace.enabled" value="false"/>

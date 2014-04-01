@@ -1,89 +1,97 @@
 package org.jboss.example.homeloan;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-import org.jboss.example.homeloan.data.Applicant;
-import org.jboss.example.homeloan.data.IncomeSource;
-import org.jboss.example.homeloan.data.LoanApplication;
+import javax.naming.InitialContext;
+import javax.naming.NameAlreadyBoundException;
+import javax.sql.DataSource;
+
+import org.h2.jdbcx.JdbcDataSource;
+import org.jboss.example.homeloan.data.Customer;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.switchyard.component.test.mixins.cdi.CDIMixIn;
+import org.switchyard.component.test.mixins.naming.NamingMixIn;
 import org.switchyard.test.Invoker;
-import org.switchyard.test.MockHandler;
 import org.switchyard.test.ServiceOperation;
 import org.switchyard.test.SwitchYardRunner;
 import org.switchyard.test.SwitchYardTestCaseConfig;
-import org.switchyard.test.SwitchYardTestKit;
 
 @RunWith(SwitchYardRunner.class)
 @SwitchYardTestCaseConfig(
-        config = SwitchYardTestCaseConfig.SWITCHYARD_XML, 
-        mixins = { CDIMixIn.class },
-        exclude = "jms")
+		config = SwitchYardTestCaseConfig.SWITCHYARD_XML, 
+		mixins = { CDIMixIn.class, NamingMixIn.class },
+		exclude = "jms")
 public class Step4Test {
 
-    @ServiceOperation("IntakeService")
-    private Invoker service;
-    
-    private SwitchYardTestKit testKit;
-    
-    @Test
-    public void customerUpdate() throws Exception {
+    private Connection connection;
+	private NamingMixIn namingMixIn;
+	@ServiceOperation("CustomerLookup")
+	private Invoker service;
 
-        MockHandler lookup = new MockHandler().replyWithOut(createCustomer());
-        testKit.replaceService("CustomerLookup", lookup);
-        testKit.replaceService("PreQualificationService");
-        
-        LoanApplication loan = createApplication();
-        service.operation("intake").sendInOnly(loan);
-        
-        // validate the results
-        Assert.assertEquals("William", loan.getApplicant().getFirstName());
+	@Test
+	public void customerExists() throws Exception {
+		Customer customer = service.sendInOut("755-55-5555").getContent(Customer.class);
+		Assert.assertEquals("Joseph", customer.getFirstName());
+	}
+	
+	@Test
+    public void customerDoesNotExist() throws Exception {
+        Customer customer = service.sendInOut("755-55-1111").getContent(Customer.class);
+        Assert.assertNull(customer.getSsn());
     }
-    
-    private List<Map<String, Object>> createCustomer() {
-        Map<String, Object> customerData = new HashMap<String, Object>();
-        customerData.put("firstName", "William");
-        customerData.put("lastName", "Lumbergh");
-        customerData.put("ssn", "711-555-5555");
-        customerData.put("streetaddress", "PO Box 100");
-        customerData.put("postalcode", "11111");
-        customerData.put("checkingbalance", "1234.56");
-        customerData.put("savingsBalance", "6543.21");
-        customerData.put("dob", "1966-07-04");
-        customerData.put("city", "Anytown");
-        customerData.put("state", "CA");
-        List<Map<String, Object>> customerList = new ArrayList<Map<String, Object>>();
-        customerList.add(customerData);
-        return customerList;
+	
+
+	@After
+    public void shutDown() throws SQLException {
+        if (!connection.isClosed()) {
+            connection.close();
+        }
+        namingMixIn.uninitialize();
     }
-    
-    private LoanApplication createApplication() {
-        LoanApplication loan = new LoanApplication();
-        Applicant applicant = new Applicant();
-        applicant.setFirstName("Bill");
-        applicant.setLastName("Lumbergh");
-        applicant.setStreetAddress("PO Box 100");
-        applicant.setPostalCode("11111");
-        applicant.setSsn("711-555-5555");
-        applicant.setCheckingBalance(1234.56);
-        applicant.setSavingsBalance(6543.21);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(1981, 1, 1);
-        applicant.setDob(calendar.getTime());
-        loan.setApplicant(applicant);
-        IncomeSource income = new IncomeSource();
-        income.setSelfEmployed(false);
-        income.setMonthlyAmount(5000);
-        loan.setAmount(15000);
-        loan.setLengthYears(20);
-        loan.setDeposit(1500);
-        loan.setIncome(income);
-        return loan;
+
+	@Before
+    public void createAndBind() throws Exception {
+    	JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:mem:test");
+        dataSource.setUser("sa");
+        dataSource.setPassword("sa");
+        connection = dataSource.getConnection();
+
+        String createStatement = "CREATE TABLE CUSTOMER("
+        	+ "SSN VARCHAR(11) PRIMARY KEY,"
+        	+ "FIRSTNAME VARCHAR(50),"
+        	+ "LASTNAME VARCHAR(50),"
+        	+ "STREETADDRESS VARCHAR(255),"
+        	+ "CITY VARCHAR(60),"
+        	+ "STATE VARCHAR(2),"
+        	+ "POSTALCODE VARCHAR(60),"
+    		+ "DOB DATE,"
+        	+ "CHECKINGBALANCE DECIMAL(14,2),"
+        	+ "SAVINGSBALANCE DECIMAL(14,2));";
+        
+        String insertCustomer = "INSERT INTO CUSTOMER VALUES "
+        		+ "('755-55-5555', 'Joseph', 'Smith', '123 Street', 'Elm', 'NC', '27808', '1970-01-01', 14000.40, 22000.99);";
+
+        connection.createStatement().executeUpdate("DROP TABLE IF EXISTS CUSTOMER");
+        connection.createStatement().executeUpdate(createStatement);
+        connection.createStatement().executeUpdate(insertCustomer);
+        
+
+        namingMixIn = new NamingMixIn();
+        namingMixIn.initialize();
+        bindDataSource(namingMixIn.getInitialContext(), "java:jboss/datasources/CustomerDS", dataSource);
+    }
+
+    private void bindDataSource(InitialContext context, String name, DataSource ds) throws Exception {
+        try {
+            context.bind(name, ds);
+        } catch (NameAlreadyBoundException e) {
+            e.getMessage(); // ignore
+        }
     }
 }

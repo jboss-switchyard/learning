@@ -3,11 +3,11 @@
 	targetNamespace="urn:homeloan:1.0" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns:tns="urn:homeloan:1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-	xmlns:app="http://jboss.com/demo/products/soa-p/5.2/Application.xsd"
+	xmlns:app="http://jboss.com/demo/products/fsw/6.0/Application.xsd"
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <schema xmlns="http://www.w3.org/2001/XMLSchema">
-  <import namespace="http://jboss.com/demo/products/soa-p/5.2/Application.xsd" schemaLocation="Application.xsd"/>
+  <import namespace="http://jboss.com/demo/products/fsw/6.0/Application.xsd" schemaLocation="Application.xsd"/>
 </schema>
   </wsdl:types>
   <wsdl:message name="intake">

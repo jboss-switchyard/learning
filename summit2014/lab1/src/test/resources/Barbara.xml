@@ -1,5 +1,5 @@
 <app:Application
-	xmlns:app="http://jboss.com/demo/products/soa-p/5.2/Application.xsd"
+	xmlns:app="http://jboss.com/demo/products/fsw/6.0/Application.xsd"
 	Application_ID="1" Date_Created="2011-09-11T09:00:00">
 	<app:Type>Conventional</app:Type>
 	<app:Type_Description />
