@@ -47,6 +47,11 @@
     </sca:reference>
     <sca:service name="IntakeSOAP" promote="Intake/IntakeService">
       <sca:interface.wsdl interface="IntakeService.wsdl#wsdl.porttype(IntakeServicePortType)"/>
+      <soap:binding.soap name="soap1">
+        <soap:wsdl>IntakeService.wsdl</soap:wsdl>
+        <soap:socketAddr>:18080</soap:socketAddr>
+        <soap:contextPath>homeloan</soap:contextPath>
+      </soap:binding.soap>
     </sca:service>
     <sca:component name="Credit">
       <sca:service name="CreditService">

@@ -2,8 +2,6 @@ package org.jboss.example.homeloan;
 
 import org.jboss.example.homeloan.data.Applicant;
 import org.jboss.example.homeloan.data.CreditInfo;
-import org.jboss.example.homeloan.data.LoanApplication;
-import org.jboss.example.homeloan.extra.MockApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,19 +35,5 @@ public class Step1Test {
         
         Assert.assertNotNull(credit);
         Assert.assertEquals(555, credit.getScore());
-    }
-    
-    @Test
-    public void qualifyLoan() throws Exception {
-        
-        LoanApplication loan = MockApplication.good();
-        // Invoke service
-        loanEvalService
-            .operation("preQualify")
-            .sendInOut(loan);
-
-        // validate the results
-        Assert.assertTrue(loan.isApproved());
-        Assert.assertEquals(0, loan.getInsuranceCost());
     }
 }
