@@ -21,10 +21,6 @@ public class Step1Test {
     @ServiceOperation("CreditService")
     private Invoker creditService;
     
-    @ServiceOperation("LoanEvaluationService")
-    private Invoker loanEvalService;
-    
-    
     @Test
     public void checkCredit() throws Exception {
 
