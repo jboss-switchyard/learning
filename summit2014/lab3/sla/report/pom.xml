@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.switchyard.training.summit2014</groupId>
-	<artifactId>homeloan-sla-report</artifactId> 
+	<groupId>org.overlord.rtgov.samples.jbossas.sla</groupId>
+	<artifactId>samples-jbossas-sla-report</artifactId> 
 	<packaging>war</packaging>
-	<name>HomeLoan::SLA::Report</name>
-	<version>1.0.0</version>
-	<properties>
-             <switchyard.version>1.1.0.Final</switchyard.version>
-             <s-ramp.version>0.4.0.Final</s-ramp.version>
-	     <rtgov.version>1.0.1.Final-redhat-4</rtgov.version>
-        </properties>
+	<name>Overlord RTGov::Samples::JBossAS::SLA::Report</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
+		<artifactId>sla</artifactId>
+		<version>1.0.1.Final-redhat-4</version>
+	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports-loader-jee</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-jpa</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.switchyard.training.summit2014</groupId>
-	<artifactId>homeloan-sla-epn</artifactId> 
+	<groupId>org.overlord.rtgov.samples.jbossas.sla</groupId>
+	<artifactId>samples-jbossas-sla-epn</artifactId> 
 	<packaging>war</packaging>
-	<name>HomeLoan::SLA::EPN</name>
-	<version>1.0.0</version>
-	<properties>
-             <switchyard.version>1.1.0.Final</switchyard.version>
-             <s-ramp.version>0.4.0.Final</s-ramp.version>
-	     <rtgov.version>1.0.1.Final-redhat-4</rtgov.version>
-        </properties>
+	<name>Overlord RTGov::Samples::JBossAS::SLA::EPN</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
+		<artifactId>sla</artifactId>
+		<version>1.0.1.Final-redhat-4</version>
+	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-loader-jee</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-			<version>${rtgov.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		

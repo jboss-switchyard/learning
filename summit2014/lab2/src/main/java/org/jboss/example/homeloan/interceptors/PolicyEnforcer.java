@@ -1,4 +1,18 @@
-
+/*
+ * 2012-3 Red Hat Inc. and/or its affiliates and other contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.jboss.example.homeloan.interceptors;
 
 import java.util.Arrays;
@@ -14,13 +28,15 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.client.CollectionManager;
 import org.overlord.rtgov.client.DefaultCollectionManager;
-import org.overlord.rtgov.quickstarts.demos.orders.Order;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeInterceptor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
+
+import org.jboss.example.homeloan.data.LoanApplication;
+import org.jboss.example.homeloan.data.Applicant;
 
 @Named("PolicyEnforcer")
 public class PolicyEnforcer implements ExchangeInterceptor {
@@ -46,6 +62,7 @@ public class PolicyEnforcer implements ExchangeInterceptor {
     }
 
     protected void init() {
+                        
                 
         if (_collectionManager != null) {
             _principals = _collectionManager.getMap(PRINCIPALS);
@@ -57,6 +74,8 @@ public class PolicyEnforcer implements ExchangeInterceptor {
         }
         
         _initialized = true;
+        
+        System.out.println("KENNY----------->"+_principals);
     }
 
     /**
@@ -109,61 +128,65 @@ public class PolicyEnforcer implements ExchangeInterceptor {
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.finer("Content type="+(p==null?null:p.getValue()));
             }
-            
+            if (p != null)
+            {
+	       System.out.println("KENNY----------->"p.getValue().toString());
+            }
             if (p != null && p.getValue().toString().equals(
                             "java:org.jboss.example.homeloan.data.LoanApplication")) {
 
-                String ssn=getApplicant(mesg);
+                String customer=getCustomer(mesg);
                        
-                if (ssn != null) {
-                    if (_principals.containsKey(ssn)) {
+                if (customer != null) {
+                    if (_principals.containsKey(customer)) {
                         
                         @SuppressWarnings("unchecked")
                         java.util.Map<String,java.io.Serializable> props=
                                 (java.util.Map<String,java.io.Serializable>)
-                                        _principals.get(ssn);
+                                        _principals.get(customer);
                         
                         // Check if customer is suspended
                         if (props.containsKey("suspended")
                                 && props.get("suspended").equals(Boolean.TRUE)) {                            
-                            throw new HandlerException("Customer '"+ssn
+                            throw new HandlerException("Customer '"+customer
                                             +"' has been suspended");
                         }
                     }
                     
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.fine("*********** Policy Enforcer: customer '"
-                                +ssn+"' has not been suspended");
-                        LOG.fine("*********** Principal: "+_principals.get(ssn));
+                                +customer+"' has not been suspended");
+                        LOG.fine("*********** Principal: "+_principals.get(customer));
                     }
                 } else {
-                    LOG.warning("Unable to find ssn");
+                    LOG.warning("Unable to find customer name");
                 }
             }
         }
     }
 
     /**
-     * This method returns the applicant ssn associated with the
+     * This method returns the customer associated with the
      * exchange.
      * 
      * @param msg The message
-     * @return The applicant ssn
+     * @return The customer
      */
-    protected String getApplicant(Message msg) {
-        String ssn=null;
+    protected String getCustomer(Message msg) {
+        String customer=null;
 
         Object content=msg.getContent();
         
         if (content instanceof LoanApplication) {
-            ssn = ((Applicant)content).getApplicant().getSsn();
+            customer = ((LoanApplication)content).getApplicant().getSsn();
         }
         
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("Customer="+ssn);
+            LOG.finer("Customer="+customer);
         }
-        
-        return (ssn);
+        System.out.println("KENNY----------->customer"+customer);
+          
+        return (customer);
     }
     
     @Override
