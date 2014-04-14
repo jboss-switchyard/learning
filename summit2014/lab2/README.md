@@ -22,6 +22,13 @@ Launch the H2 db and console via the h2 jar in your EAP install:
 java -jar modules/system/layers/base/com/h2database/h2/main/h2-1.3.168-redhat-2.jar 
 ```
 
+At the login screen for the H2 console, use the following values. $FSW_HOME is where you have installed FSW; be sure to replace this with the actual directory for your installation.
+```
+JDBC URL: jdbc:h2:file:$FSW_HOME/jboss-eap-6.1/standalone/data/h2/customer;mvcc=true
+User Name : sa
+Password : sa
+```
+
 In the console, create a table:
 ```
 CREATE TABLE CUSTOMER(
@@ -51,7 +58,7 @@ INSERT INTO CUSTOMER VALUES
 Add the following datasource definition to standalone-full.xml:
 ```
 <datasource jndi-name="java:jboss/datasources/CustomerDS" pool-name="CustomerDS" enabled="true" use-java-context="true">
-    <connection-url>jdbc:h2:tcp://localhost/~/test</connection-url>
+    <connection-url>jdbc:h2:file:${jboss.server.data.dir}/h2/customer;mvcc=true</connection-url>
     <driver>h2</driver>
     <security>
         <user-name>sa</user-name>
@@ -76,6 +83,11 @@ ${EAP_HOME}/bin/add-user.sh
 Start the server:
 ```
 bin/standalone.sh -c standalone-full.xml
+```
+
+In a separate terminal window, add a JMS queue:
+```
+bin/jboss-cli.sh --connect --command="jms-queue add --queue-address=LoanIntake --entries=LoanIntake"
 ```
 
 ####Running the Demo
@@ -104,8 +116,4 @@ Test Manual Approval with JMS message:
 mvn -Pjms -Dexec.args="Joe"
 ```
 
-Check status page and see that the application is in "Pending" status - http://localhost:8080/loanstatus/800559876 .
-
-Go to the evaluation page and enter rate, explanation, and set status to Rejected/Approved - http://localhost:8080/loans/evaluation.jsf .
-
-Check status page and see that the application status matches what you entered above.
+Check status via the status web page - http://localhost:8080/loanstatus/800559876 .

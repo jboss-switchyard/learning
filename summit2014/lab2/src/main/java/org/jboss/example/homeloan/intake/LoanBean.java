@@ -1,7 +1,6 @@
 package org.jboss.example.homeloan.intake;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 
 import javax.inject.Named;
 

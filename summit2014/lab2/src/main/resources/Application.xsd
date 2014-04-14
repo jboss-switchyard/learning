@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsd:schema id="Application" elementFormDefault="qualified"
-	targetNamespace="http://jboss.com/demo/products/soa-p/5.2/Application.xsd"
-	xmlns:tns="http://jboss.com/demo/products/soa-p/5.2/Application.xsd"
+	targetNamespace="http://jboss.com/demo/products/fsw/6.0/Application.xsd"
+	xmlns:tns="http://jboss.com/demo/products/fsw/6.0/Application.xsd"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	
 	<xsd:element name="Application" type="tns:ApplicationType" />

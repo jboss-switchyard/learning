@@ -3,7 +3,6 @@ package org.jboss.example.homeloan.data;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
-import org.switchyard.annotations.Transformer;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

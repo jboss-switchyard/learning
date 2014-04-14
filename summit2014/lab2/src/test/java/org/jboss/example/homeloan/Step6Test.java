@@ -3,7 +3,7 @@ package org.jboss.example.homeloan;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 
-import org.jboss.example.homeloan.data.LoanApplication;
+import org.jboss.example.homeloan.extra.MockApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class Step6Test {
         MessageProducer producer = hornetQ.getJMSSession().createProducer(
                 HornetQMixIn.getJMSQueue(REQUEST_QUEUE));
         ObjectMessage message = hornetQ.getJMSSession().createObjectMessage();
-        message.setObject(new LoanApplication());
+        message.setObject(MockApplication.good());
         producer.send(message);
         
         // Verify that we received the message in the service

@@ -36,7 +36,7 @@
     </sca:component>
     <sca:component name="Intake">
       <camel:implementation.camel>
-        <camel:java class="org.jboss.example.homeloan.intake.CamelServiceRoute"/>
+        <camel:xml path="IntakeServiceRoute.xml"/>
       </camel:implementation.camel>
       <sca:service name="IntakeService">
         <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
@@ -63,13 +63,6 @@
         <soap:contextPath>homeloan</soap:contextPath>
       </soap:binding.soap>
     </sca:service>
-    <sca:service name="IntakeJMS" promote="Intake/IntakeService">
-      <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
-      <jms:binding.jms name="jms1">
-        <jms:queue>LoanIntake</jms:queue>
-        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
-      </jms:binding.jms>
-    </sca:service>
     <sca:component name="Credit">
       <bean:implementation.bean class="org.jboss.example.homeloan.credit.CreditServiceBean"/>
       <sca:service name="CreditService">
@@ -83,20 +76,44 @@
             <rules:resource location="mortgages.drl" type="DRL"/>
           </rules:resources>
         </rules:manifest>
+        <rules:operations>
+          <rules:operation name="qualify" type="EXECUTE">
+            <rules:inputs>
+              <rules:input from="message.content"/>
+              <rules:input from="message.content.applicant"/>
+              <rules:input from="message.content.bankruptcy"/>
+              <rules:input from="message.content.income"/>
+            </rules:inputs>
+            <rules:outputs/>
+          </rules:operation>
+        </rules:operations>
       </rules:implementation.rules>
       <sca:service name="LoanEvaluationService">
         <sca:interface.java interface="org.jboss.example.homeloan.eval.LoanEvaluationService"/>
       </sca:service>
     </sca:component>
+    <sca:service name="IntakeJMS" promote="Intake/IntakeService">
+      <sca:interface.java interface="org.jboss.example.homeloan.intake.IntakeService"/>
+      <jms:binding.jms name="jms1">
+        <jms:queue>LoanIntake</jms:queue>
+        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
+      </jms:binding.jms>
+    </sca:service>
+    <sca:component name="Status">
+      <bean:implementation.bean class="org.jboss.example.homeloan.status.StatusServiceBean"/>
+      <sca:service name="StatusService">
+        <sca:interface.java interface="org.jboss.example.homeloan.status.StatusService"/>
+      </sca:service>
+    </sca:component>
+    <sca:service name="StatusService" promote="Status/StatusService">
+      <sca:interface.java interface="org.jboss.example.homeloan.status.StatusService"/>
+      <resteasy:binding.rest name="rest1">
+        <resteasy:interfaces>org.jboss.example.homeloan.status.QualificationResource</resteasy:interfaces>
+        <resteasy:contextPath>loanstatus</resteasy:contextPath>
+      </resteasy:binding.rest>
+    </sca:service>
   </sca:composite>
   <transforms/>
-  <validates>
-    <validate:validate.xml name="{http://jboss.com/demo/products/soa-p/5.2/Application.xsd}Application" schemaType="XML_SCHEMA" namespaceAware="true">
-      <validate:schemaFiles>
-        <validate:entry file="Application.xsd"/>
-      </validate:schemaFiles>
-    </validate:validate.xml>
-  </validates>
   <domain>
     <properties>
       <property name="org.switchyard.handlers.messageTrace.enabled" value="false"/>

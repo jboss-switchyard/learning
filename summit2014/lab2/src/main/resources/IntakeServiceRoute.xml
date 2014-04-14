@@ -9,18 +9,17 @@
             <simple>${body.applicant.ssn}</simple>
         </setBody>
         <to uri="switchyard://CustomerLookup"/>
-        
         <filter>
             <simple>${body} != null and ${body.size} == 1</simple>
-            <bean ref="Loan" method="customerUpdate(${property.LoanApplication}, ${body[0]})"/>
+            <bean ref="Loan" method="customerUpdate(${property.LoanApplication}, ${body})"/>
             <setHeader headerName="ExistingCustomer">
                 <constant>true</constant>
             </setHeader>
         </filter>
-        <bean ref="Loan" method="summary(${property.LoanApplication})"/>
         <setBody>
             <property>LoanApplication</property>
         </setBody>
+        <bean ref="Loan" method="summary"/>
         <to uri="switchyard://PreQualificationService"/>
     </route>
 </routes>
