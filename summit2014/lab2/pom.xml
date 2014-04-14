@@ -24,6 +24,23 @@
     <s-ramp.version>0.4.0.Final</s-ramp.version>
   </properties>
   <dependencies>
+        		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-switchyard</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
     <dependency>
       <groupId>org.switchyard</groupId>
       <artifactId>switchyard-api</artifactId>
