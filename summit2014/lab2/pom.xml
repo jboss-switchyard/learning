@@ -22,6 +22,7 @@
   <properties>
     <switchyard.version>1.1.1-p5-redhat-1</switchyard.version>
     <s-ramp.version>0.4.0.Final</s-ramp.version>
+      <rtgov.version>1.0.1.Final-redhat-4</rtgov.version>
   </properties>
   <dependencies>
         		<dependency>

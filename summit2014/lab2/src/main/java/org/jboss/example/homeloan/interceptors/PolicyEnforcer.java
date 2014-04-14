@@ -75,7 +75,6 @@ public class PolicyEnforcer implements ExchangeInterceptor {
         
         _initialized = true;
         
-        System.out.println("KENNY----------->"+_principals);
     }
 
     /**
@@ -127,10 +126,6 @@ public class PolicyEnforcer implements ExchangeInterceptor {
             
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.finer("Content type="+(p==null?null:p.getValue()));
-            }
-            if (p != null)
-            {
-	       System.out.println("KENNY----------->"p.getValue().toString());
             }
             if (p != null && p.getValue().toString().equals(
                             "java:org.jboss.example.homeloan.data.LoanApplication")) {
@@ -184,7 +179,6 @@ public class PolicyEnforcer implements ExchangeInterceptor {
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Customer="+customer);
         }
-        System.out.println("KENNY----------->customer"+customer);
           
         return (customer);
     }
