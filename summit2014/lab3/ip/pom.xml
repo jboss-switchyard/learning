@@ -6,10 +6,13 @@
 	<packaging>war</packaging>
 	<name>HomeLoan::IP</name>
 	<version>1.0.0</version>
-
-        <properties>
-             <switchyard.version>1.1.0.Final</switchyard.version>
-             <s-ramp.version>0.4.0.Final</s-ramp.version>
+	<properties>
+		<javaee-api.version>6.0</javaee-api.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+		<jbossas.version>7.2.1.Final-redhat-10</jbossas.version>
+		<jbossts.version>4.17.7.Final-redhat-4</jbossts.version>
+		<switchyard.version>1.1.1-p5-redhat-1</switchyard.version>
+		<version.org.jboss.integration-platform-jboss-integration-platform-bom>6.0.0.CR3-redhat-4</version.org.jboss.integration-platform-jboss-integration-platform-bom>
 	     <rtgov.version>1.0.1.Final-redhat-4</rtgov.version>
         </properties>
 	<dependencies>
@@ -28,12 +31,7 @@
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<version>${javaee-api.version}</version>
 		</dependency>
 	</dependencies>
 	

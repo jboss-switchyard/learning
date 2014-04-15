@@ -5,12 +5,16 @@
 	<artifactId>samples-jbossas-sla-monitor</artifactId> 
 	<packaging>war</packaging>
 	<name>Overlord RTGov::Samples::JBossAS::SLA::Monitor</name>
-
-	<parent>
-		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
-		<artifactId>sla</artifactId>
-		<version>1.0.1.Final-redhat-4</version>
-	</parent>
+	<version>1.0.1.Final-redhat-4</version>
+	<properties>
+		<javaee-api.version>6.0</javaee-api.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+		<jbossas.version>7.2.1.Final-redhat-10</jbossas.version>
+		<jbossts.version>4.17.7.Final-redhat-4</jbossts.version>
+		<switchyard.version>1.1.1-p5-redhat-1</switchyard.version>
+		<version.org.jboss.integration-platform-jboss-integration-platform-bom>6.0.0.CR3-redhat-4</version.org.jboss.integration-platform-jboss-integration-platform-bom>
+	     <rtgov.version>1.0.1.Final-redhat-4</rtgov.version>
+        </properties>
 
 	<dependencies>
 		<dependency>
@@ -27,35 +31,9 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jackson-provider</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<version>${javaee-api.version}</version>
 		</dependency>
 	</dependencies>
 	
